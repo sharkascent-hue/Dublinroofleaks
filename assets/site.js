@@ -73,7 +73,8 @@
   function runIntro() {
     try { sessionStorage.setItem('drl_intro', '1'); } catch (e) {}
     if (!loader || !html.classList.contains('intro') || reduce) { finishIntro(); return; }
-    setTimeout(() => { html.classList.add('intro-out'); setTimeout(finishIntro, 680); }, 2200);
+    rainOn(loader, { always: true, density: 6, speed: 1.4, alpha: 1.3 });
+    setTimeout(() => { html.classList.add('intro-out'); setTimeout(finishIntro, 700); }, 3250);
   }
 
   /* hero entrance */
@@ -236,44 +237,31 @@
     finally { btn.disabled = false; btn.innerHTML = orig; }
   }));
 
-  /* ambient background: blue dust */
-  if (!reduce) $$('.hero, .cta, section.dark, footer, .hs').forEach(sec => {
-    if ($('.bgfx', sec)) return;
+  /* rain on dark sections */
+  function rainOn(sec, opts) {
+    opts = opts || {};
+    if (reduce || $('.bgfx', sec)) return;
     const fx = document.createElement('div'); fx.className = 'bgfx'; fx.setAttribute('aria-hidden', 'true');
     const cv = document.createElement('canvas'); fx.appendChild(cv);
     if (getComputedStyle(sec).position === 'static') sec.style.position = 'relative';
     sec.insertBefore(fx, sec.firstChild);
-    const ctx = cv.getContext('2d'); let W = 0, H = 0, dpr = Math.min(devicePixelRatio || 1, 2), parts = [], run = false, raf = null;
-    const count = () => Math.round(Math.min(90, Math.max(18, (W * H) / (touch ? 26000 : 16000))));
-    const C = { core: '190,224,255', mid: '78,168,255', dot: '230,243,255' };
-    const mk = fresh => ({ x: Math.random() * W, y: fresh ? H + 10 : Math.random() * H, r: 0.6 + Math.random() * 1.8, s: 0.12 + Math.random() * 0.28, a: Math.random() * Math.PI * 2, sw: 0.15 + Math.random() * 0.35, tw: Math.random() * Math.PI * 2, ts: 0.01 + Math.random() * 0.02, o: 0.25 + Math.random() * 0.55 });
-    const size = () => {
-      const r = sec.getBoundingClientRect(); const oW = W, oH = H;
-      if (oW && Math.abs(r.width - oW) < 2 && Math.abs(r.height - oH) < 160) return;
-      W = r.width; H = r.height; cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      if (!parts.length) { parts = Array.from({ length: count() }, () => mk(false)); return; }
-      const sx = oW ? W / oW : 1, sy = oH ? H / oH : 1; parts.forEach(p => { p.x *= sx; p.y *= sy; });
-      const n = count(); while (parts.length < n) parts.push(mk(false)); if (parts.length > n) parts.length = n;
-    };
+    const ctx = cv.getContext('2d'); let W = 0, H = 0, dpr = Math.min(devicePixelRatio || 1, 2), drops = [], run = !!opts.always, raf = null;
+    const dens = opts.density || (touch ? 16 : 11);
+    const mk = init => { const z = Math.random(); return { x: Math.random() * (W + 60), y: init ? Math.random() * H : -40, l: 10 + z * 22, v: (6 + z * 10) * (opts.speed || 1), w: .6 + z * 1.1, a: (.08 + z * .3) * (opts.alpha || 1), z }; };
+    const size = () => { const r = sec.getBoundingClientRect(); if (W && Math.abs(r.width - W) < 2 && Math.abs(r.height - H) < 160) return; W = r.width; H = r.height; cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); drops = Array.from({ length: Math.floor(W / dens) }, () => mk(true)); };
     const tick = () => {
       if (!run) { raf = null; return; }
-      ctx.clearRect(0, 0, W, H);
-      for (const p of parts) {
-        p.y -= p.s; p.a += 0.004; p.x += Math.sin(p.a) * p.sw * 0.3; p.tw += p.ts;
-        if (p.y < -10) Object.assign(p, mk(true));
-        const al = p.o * (0.55 + 0.45 * Math.sin(p.tw));
-        const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 4);
-        g.addColorStop(0, `rgba(${C.core},${al})`); g.addColorStop(0.4, `rgba(${C.mid},${al * 0.35})`); g.addColorStop(1, `rgba(${C.mid},0)`);
-        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y, p.r * 4, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = `rgba(${C.dot},${al})`; ctx.beginPath(); ctx.arc(p.x, p.y, p.r * 0.7, 0, Math.PI * 2); ctx.fill();
-      }
+      ctx.clearRect(0, 0, W, H); ctx.lineCap = 'round';
+      for (let i = 0; i < drops.length; i++) { const d = drops[i]; ctx.strokeStyle = 'rgba(170,205,255,' + d.a + ')'; ctx.lineWidth = d.w; ctx.beginPath(); ctx.moveTo(d.x, d.y); ctx.lineTo(d.x - d.l * .18, d.y + d.l); ctx.stroke(); d.y += d.v; d.x -= d.v * .18; if (d.y > H + 40 || d.x < -40) drops[i] = mk(false); }
       raf = requestAnimationFrame(tick);
     };
-    const io = new IntersectionObserver(es => { run = es[0].isIntersecting; if (run && !raf) raf = requestAnimationFrame(tick); });
-    size(); io.observe(sec);
+    size();
+    if (opts.always) raf = requestAnimationFrame(tick);
+    else new IntersectionObserver(es => { run = es[0].isIntersecting; if (run && !raf) raf = requestAnimationFrame(tick); }).observe(sec);
     let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(size, 250); });
-    document.addEventListener('visibilitychange', () => { if (document.hidden) run = false; else { run = true; if (!raf) raf = requestAnimationFrame(tick); } });
-  });
+    document.addEventListener('visibilitychange', () => { if (document.hidden) run = false; else if (!opts.always) { run = true; if (!raf) raf = requestAnimationFrame(tick); } });
+  }
+  $$('.hero, .phero, .cta, section.dark, footer, .hs').forEach(sec => rainOn(sec));
 
   /* press feedback */
   document.addEventListener('pointerdown', e => { const el = e.target.closest('.card, .step, .post, .val, .towns span, .rev'); if (!el) return; el.classList.add('pressed'); clearTimeout(el._pt); el._pt = setTimeout(() => el.classList.remove('pressed'), 900); }, { passive: true });
