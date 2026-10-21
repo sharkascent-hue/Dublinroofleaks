@@ -73,7 +73,7 @@
   function runIntro() {
     try { sessionStorage.setItem('drl_intro', '1'); } catch (e) {}
     if (!loader || !html.classList.contains('intro') || reduce) { finishIntro(); return; }
-    rainOn(loader, { always: true, density: 6, speed: 1.4, alpha: 1.3 });
+    rainOn(loader, { always: true, density: 6, speed: 1.4, alpha: 1.6, color: 'rgba(20,121,224,' });
     setTimeout(() => { html.classList.add('intro-out'); setTimeout(finishIntro, 700); }, 3250);
   }
 
@@ -252,7 +252,7 @@
     const tick = () => {
       if (!run) { raf = null; return; }
       ctx.clearRect(0, 0, W, H); ctx.lineCap = 'round';
-      for (let i = 0; i < drops.length; i++) { const d = drops[i]; ctx.strokeStyle = 'rgba(170,205,255,' + d.a + ')'; ctx.lineWidth = d.w; ctx.beginPath(); ctx.moveTo(d.x, d.y); ctx.lineTo(d.x - d.l * .18, d.y + d.l); ctx.stroke(); d.y += d.v; d.x -= d.v * .18; if (d.y > H + 40 || d.x < -40) drops[i] = mk(false); }
+      for (let i = 0; i < drops.length; i++) { const d = drops[i]; ctx.strokeStyle = (opts.color || 'rgba(170,205,255,') + d.a + ')'; ctx.lineWidth = d.w; ctx.beginPath(); ctx.moveTo(d.x, d.y); ctx.lineTo(d.x - d.l * .18, d.y + d.l); ctx.stroke(); d.y += d.v; d.x -= d.v * .18; if (d.y > H + 40 || d.x < -40) drops[i] = mk(false); }
       raf = requestAnimationFrame(tick);
     };
     size();
