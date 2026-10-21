@@ -84,15 +84,17 @@ html.intro body{overflow:hidden}
 #loader .water::before,#loader .water::after{z-index:3}
 #loader .sea{position:absolute;inset:0;overflow:hidden;z-index:1}
 #loader .tint{position:absolute;inset:0;z-index:2;background:linear-gradient(180deg,rgba(20,121,224,.55),rgba(13,93,179,.8) 60%)}
-#loader .house{position:absolute;width:var(--w,160px);z-index:1;opacity:.92;transform-origin:50% 50%;animation:sinkdown 2.6s 1.75s cubic-bezier(.3,.2,.4,1) both;filter:drop-shadow(0 10px 18px rgba(0,30,80,.35))}
-#loader .house svg{width:100%;height:auto;display:block;animation:bobtilt var(--d,4s) ease-in-out infinite}
-#loader .house.a{left:2%;bottom:34vh;--w:150px;--d:4.2s;--r:-7deg}
-#loader .house.b{left:36%;bottom:46vh;--w:200px;--d:5s;--r:5deg}
-#loader .house.c{left:70%;bottom:26vh;--w:150px;--d:4.6s;--r:-4deg}
-@keyframes sinkdown{from{transform:translateY(-60px)}to{transform:translateY(120px)}}
-@keyframes bobtilt{0%,100%{transform:rotate(var(--r,0deg))}50%{transform:rotate(calc(var(--r,0deg) * -.4)) translateY(5px)}}
-@media (max-width:600px){#loader .house.a{left:-4%;--w:132px;bottom:30vh}#loader .house.b{left:30%;--w:168px;bottom:44vh}#loader .house.c{left:66%;--w:132px;bottom:22vh}}
-@media (min-width:1000px){#loader .house.a{left:6%;--w:250px;bottom:30vh}#loader .house.b{left:38%;--w:340px;bottom:42vh}#loader .house.c{left:74%;--w:250px;bottom:22vh}}
+#loader .house{position:absolute;width:var(--w,160px);z-index:1;opacity:.9;transform-origin:50% 50%;animation:sinkdown 3s 1.75s cubic-bezier(.35,.1,.45,1) both;filter:drop-shadow(0 12px 20px rgba(0,30,80,.4))}
+#loader .house svg{width:100%;height:auto;display:block;animation:sway var(--d,4s) ease-in-out infinite}
+#loader .house.a{left:-2%;bottom:42vh;--w:170px;--d:4.4s;--r0:-24deg;--r1:-38deg;--dx:26px}
+#loader .house.b{left:52%;bottom:58vh;--w:230px;--d:5.2s;--r0:14deg;--r1:26deg;--dx:-34px}
+#loader .house.c{left:68%;bottom:14vh;--w:160px;--d:4.8s;--r0:-40deg;--r1:-58deg;--dx:18px}
+@keyframes sinkdown{from{transform:translate(0,-50px) rotate(var(--r0,0deg))}to{transform:translate(var(--dx,0px),230px) rotate(var(--r1,0deg))}}
+@keyframes sway{0%,100%{transform:rotate(0deg)}50%{transform:rotate(3deg) translateY(4px)}}
+#loader .bub{position:absolute;bottom:-20px;left:var(--x);width:var(--s,8px);height:var(--s,8px);border-radius:50%;border:1.5px solid rgba(255,255,255,.7);background:rgba(255,255,255,.15);animation:bubble var(--t,3s) var(--dl,0s) linear infinite;z-index:1}
+@keyframes bubble{from{transform:translateY(0) translateX(0);opacity:0}15%{opacity:.9}to{transform:translateY(-70vh) translateX(14px);opacity:0}}
+@media (max-width:600px){#loader .house.a{left:-10%;--w:140px;bottom:36vh}#loader .house.b{left:44%;--w:190px;bottom:56vh}#loader .house.c{left:60%;--w:130px;bottom:12vh}}
+@media (min-width:1000px){#loader .house.a{left:4%;--w:290px;bottom:40vh}#loader .house.b{left:50%;--w:400px;bottom:60vh}#loader .house.c{left:76%;--w:270px;bottom:10vh}}
 @keyframes fill{to{height:115%}}
 @keyframes wave{to{background-position-x:200px}}
 @keyframes lfade{to{opacity:1;transform:none}}
