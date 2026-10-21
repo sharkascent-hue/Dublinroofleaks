@@ -69,22 +69,22 @@ section{padding:clamp(70px,8vw,112px) 0;position:relative}
 html.intro #loader{display:grid}
 html.intro body{overflow:hidden}
 #loader canvas{position:absolute;inset:0;width:100%;height:100%}
-#loader .gust{position:absolute;left:-40%;height:2px;width:34%;border-radius:2px;background:linear-gradient(90deg,transparent,rgba(20,121,224,.6),transparent);filter:blur(.5px);animation:gust 1.1s cubic-bezier(.2,.7,.2,1) both}
+#loader .gust{position:absolute;left:-40%;height:2px;width:34%;border-radius:2px;background:linear-gradient(90deg,transparent,rgba(20,121,224,.6),transparent);filter:blur(.5px);animation:gust .8s cubic-bezier(.2,.7,.2,1) both}
 #loader .gust:nth-child(2){top:36%;animation-delay:.05s}#loader .gust:nth-child(3){top:44%;width:22%;animation-delay:.22s}#loader .gust:nth-child(4){top:55%;animation-delay:.12s}#loader .gust:nth-child(5){top:63%;width:18%;animation-delay:.3s}
 @keyframes gust{from{transform:translateX(0);opacity:0}30%{opacity:1}to{transform:translateX(420vw);opacity:0}}
 #loader .box{position:relative;display:grid;place-items:center;z-index:2}
-#loader .box::before{content:"";position:absolute;width:min(110vw,560px);height:min(110vw,560px);border-radius:50%;background:radial-gradient(circle,rgba(233,242,253,.9),rgba(233,242,253,.4) 45%,transparent 70%);opacity:0;animation:lfade 1s .3s ease forwards}
-#loader .logo{width:min(64vw,300px);opacity:0;transform:translateX(-70vw) rotate(-10deg) scale(.7);animation:blowin 1.1s .15s cubic-bezier(.17,.9,.3,1.15) forwards;filter:drop-shadow(0 18px 30px rgba(11,43,92,.25))}
+#loader .box::before{content:"";position:absolute;width:min(110vw,560px);height:min(110vw,560px);border-radius:50%;background:radial-gradient(circle,rgba(233,242,253,.9),rgba(233,242,253,.4) 45%,transparent 70%);opacity:0;animation:lfade .7s .15s ease forwards}
+#loader .logo{width:min(64vw,300px);opacity:0;transform:translateX(-70vw) rotate(-10deg) scale(.7);animation:blowin .75s .05s cubic-bezier(.17,.9,.3,1.15) forwards;filter:drop-shadow(0 18px 30px rgba(11,43,92,.25))}
 #loader .logo img{width:100%}
 @keyframes blowin{to{opacity:1;transform:none}}
-#loader .lt{margin-top:18px;font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:var(--navy);font-weight:700;opacity:0;transform:translateY(10px);animation:lfade .7s 1.1s ease forwards}
-#loader .water{position:absolute;left:0;right:0;bottom:0;height:120%;z-index:3;background:linear-gradient(180deg,rgba(47,147,255,.7),rgba(20,121,224,.9) 30%,var(--blue-dark));transform:translateY(calc(100% + 70px));animation:fill 1.5s 1.7s cubic-bezier(.4,0,.2,1) forwards;will-change:transform}
+#loader .lt{margin-top:18px;font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:var(--navy);font-weight:700;opacity:0;transform:translateY(10px);animation:lfade .5s .6s ease forwards}
+#loader .water{position:absolute;left:0;right:0;bottom:0;height:120%;z-index:3;background:linear-gradient(180deg,rgba(47,147,255,.7),rgba(20,121,224,.9) 30%,var(--blue-dark));transform:translateY(calc(100% + 70px));animation:fill 1s .95s cubic-bezier(.4,0,.2,1) forwards;will-change:transform}
 #loader .water::before{content:"";position:absolute;left:0;right:0;top:-44px;height:46px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 46' preserveAspectRatio='none'%3E%3Cpath d='M0 26 C 30 6 70 6 100 26 S 170 46 200 26 V46 H0z' fill='%234ea8ff' fill-opacity='.55'/%3E%3C/svg%3E") repeat-x;background-size:200px 46px;animation:wave 2.4s linear infinite}
 #loader .water::after{content:"";position:absolute;left:0;right:0;top:-30px;height:32px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 32' preserveAspectRatio='none'%3E%3Cpath d='M0 18 C 20 4 60 4 80 18 S 140 32 160 18 V32 H0z' fill='%232f93ff'/%3E%3Cpath d='M0 18 C 20 4 60 4 80 18 S 140 32 160 18' fill='none' stroke='%23ffffff' stroke-opacity='.75' stroke-width='2'/%3E%3C/svg%3E") repeat-x;background-size:160px 32px;animation:wave 1.7s linear infinite reverse}
 #loader .water::before,#loader .water::after{z-index:3}
 #loader .sea{position:absolute;inset:0;overflow:hidden;z-index:1}
 #loader .tint{position:absolute;inset:0;z-index:2;background:linear-gradient(180deg,rgba(20,121,224,.55),rgba(13,93,179,.8) 60%)}
-#loader .house{position:absolute;width:var(--w,160px);z-index:1;opacity:.9;transform-origin:50% 50%;animation:sinkdown 2.3s 1.75s cubic-bezier(.3,.15,.4,1) both;filter:drop-shadow(0 12px 20px rgba(0,30,80,.4))}
+#loader .house{position:absolute;width:var(--w,160px);z-index:1;opacity:.9;transform-origin:50% 50%;animation:sinkdown 1.5s .95s cubic-bezier(.3,.15,.4,1) both;filter:drop-shadow(0 12px 20px rgba(0,30,80,.4))}
 #loader .house svg{width:100%;height:auto;display:block;animation:sway var(--d,4s) ease-in-out infinite}
 #loader .house.a{left:-2%;top:2vh;--w:170px;--d:4.4s;--r0:-24deg;--r1:-38deg;--dx:26px;--dy:62vh}
 #loader .house.b{left:52%;top:0;--w:230px;--d:5.2s;--r0:14deg;--r1:26deg;--dx:-34px;--dy:40vh}
@@ -98,7 +98,7 @@ html.intro body{overflow:hidden}
 @keyframes fill{to{transform:translateY(0)}}
 @keyframes wave{to{background-position-x:200px}}
 @keyframes lfade{to{opacity:1;transform:none}}
-html.intro-out #loader{animation:lout .95s cubic-bezier(.7,0,.25,1) forwards}
+html.intro-out #loader{animation:lout .7s cubic-bezier(.7,0,.25,1) forwards}
 @keyframes lout{to{transform:translateY(-104%);visibility:hidden}}
 @media (prefers-reduced-motion:reduce){html.intro #loader{display:none}html.intro body{overflow:auto}}
 

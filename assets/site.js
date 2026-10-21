@@ -74,7 +74,7 @@
     try { sessionStorage.setItem('drl_intro', '1'); } catch (e) {}
     if (!loader || !html.classList.contains('intro') || reduce) { finishIntro(); return; }
     rainOn(loader, { always: true, density: 6, speed: 1.4, alpha: 1.6, color: 'rgba(20,121,224,' });
-    setTimeout(() => { html.classList.add('intro-out'); heroIn(); setTimeout(finishIntro, 950); }, 3300);
+    setTimeout(() => { html.classList.add('intro-out'); heroIn(); setTimeout(finishIntro, 700); }, 2000);
   }
 
   /* hero entrance */
