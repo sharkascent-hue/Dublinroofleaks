@@ -1,4 +1,4 @@
-/* Dublin Roof Leak Specialists — shared behaviour.
+/* Vantage Roof Repairs — shared behaviour.
    Degrades gracefully: without GSAP or Lenis the content is still visible. */
 (function () {
   /* ===== EDIT CONTACT DETAILS HERE (updates every page) ===== */
@@ -71,7 +71,7 @@
   const loader = $('#loader');
   function finishIntro() { if (loader) loader.remove(); html.classList.remove('intro', 'intro-out'); heroIn(); }
   function runIntro() {
-    try { sessionStorage.setItem('drl_intro', '1'); } catch (e) {}
+    try { sessionStorage.setItem('vr_intro', '1'); } catch (e) {}
     if (!loader || !html.classList.contains('intro') || reduce) { finishIntro(); return; }
     rainOn(loader, { always: true, density: 6, speed: 1.4, alpha: 1.6, color: 'rgba(20,121,224,' });
     setTimeout(() => { html.classList.add('intro-out'); heroIn(); setTimeout(finishIntro, 700); }, 2000);
