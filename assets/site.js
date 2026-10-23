@@ -3,12 +3,12 @@
 (function () {
   /* ===== EDIT CONTACT DETAILS HERE (updates every page) ===== */
   var CONFIG = {
-    phone: '087 466 6010', phoneHref: 'tel:+353874666010',
-    whatsapp: 'https://wa.me/353874666010',
+    phone: '087 442 9299', phoneHref: 'tel:+353874429299',
+    whatsapp: 'https://wa.me/353874429299',
     email: 'sales.vantageroofing@gmail.com',
     hours: 'Mon – Fri 9am – 5pm · Sat 9am – 4pm · Emergency call-outs 24/7',
-    address: '39 Northumberland Rd, Ballsbridge, Dublin 4, D04 H1F3',
-    googleReview: 'https://maps.app.goo.gl/CdXup99Qys6fNFPCA',
+    address: 'Long Mile Road, Dublin 12',
+    googleReview: '',
     formEndpoint: '' // e.g. 'https://formspree.io/f/xxxxxxx' — blank sends via the visitor's email app
   };
   /* ============================================================ */
