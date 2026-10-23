@@ -3,8 +3,8 @@
 (function () {
   /* ===== EDIT CONTACT DETAILS HERE (updates every page) ===== */
   var CONFIG = {
-    phone: '087 442 9299', phoneHref: 'tel:+353874429299',
-    whatsapp: 'https://wa.me/353874429299',
+    phone: '087 466 6010', phoneHref: 'tel:+353874666010',
+    whatsapp: 'https://wa.me/353874666010',
     email: 'vantageroofingdublin@gmail.com',
     hours: 'Mon – Fri 9am – 5pm · Sat 9am – 4pm · Emergency call-outs 24/7',
     address: 'Long Mile Road, Dublin 12',
@@ -225,12 +225,18 @@
   });
 
   /* quote forms (hero dropdown + contact page) */
+  $$('form.qf [required]').forEach(i => i.addEventListener('input', () => { const f = i.closest('.field'); if (f && i.value.trim()) f.classList.remove('err'); }));
   $$('form.qf').forEach(form => form.addEventListener('submit', async e => {
     e.preventDefault();
     if ($('.hp input', form) && $('.hp input', form).value) return;
+    const missing = $$('[required]', form).filter(i => !i.value.trim() || (i.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(i.value)) || (i.type === 'tel' && i.value.replace(/\D/g, '').length < 7));
+    $$('.field', form).forEach(f => f.classList.remove('err'));
+    missing.forEach(i => i.closest('.field') && i.closest('.field').classList.add('err'));
+    const fe = $('.ferr', form); if (fe) fe.style.display = missing.length ? 'block' : 'none';
+    if (missing.length) { missing[0].focus(); return; }
     const btn = $('button[type=submit]', form); const orig = btn.innerHTML; btn.disabled = true; btn.textContent = 'Sending…';
     const data = {}; $$('input,select,textarea', form).forEach(i => { if (i.name && i.name !== 'website') data[i.name] = i.value; });
-    const ok = () => { const m = $('.ok', form); if (m) m.style.display = 'block'; form.reset(); };
+    const ok = () => { const m = $('.ok', form); if (m) m.style.display = 'block'; form.reset(); $$('.field', form).forEach(f => f.classList.remove('err')); };
     try {
       if (CONFIG.formEndpoint) { const payload = Object.assign({ access_key: CONFIG.formKey, subject: 'New quote request from ' + (data.name || 'website') + (data.service ? ' — ' + data.service : ''), from_name: 'Vantage Roof Repairs website', botcheck: '' }, data); const r = await fetch(CONFIG.formEndpoint, { method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }); const j = await r.json().catch(() => ({})); if (!r.ok || j.success === false) throw 0; ok(); }
       else { location.href = 'mailto:' + CONFIG.email + '?subject=' + encodeURIComponent('Quote request from ' + (data.name || 'website')) + '&body=' + encodeURIComponent(Object.keys(data).map(k => k + ': ' + data[k]).join('\n')); ok(); }

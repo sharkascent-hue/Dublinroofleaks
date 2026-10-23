@@ -527,3 +527,11 @@ html.touch .in[data-reveal],html.touch .in[data-split],html.touch .in[data-clip]
   .marquee .track{animation:none}
   .hero .scroll i{animation:none}
 }
+
+/* form validation */
+.ferr{display:none;background:#fdecec;border:1px solid #f3b4b4;color:#9b1c1c;padding:12px 14px;border-radius:10px;margin-bottom:14px;font-weight:600;font-size:.92rem;max-width:none}
+.qform .ferr{background:rgba(224,75,75,.14);border-color:rgba(224,75,75,.5);color:#ffb3b3}
+.field.err input,.field.err select,.field.err textarea{border-color:#e04b4b!important;box-shadow:0 0 0 4px rgba(224,75,75,.15)}
+.field.err label{color:#c62828}.qform .field.err label{color:#ffb3b3}
+.field.err::after{content:"Required";display:block;font-size:.74rem;font-weight:700;color:#c62828;margin-top:5px}
+.qform .field.err::after{color:#ffb3b3}
