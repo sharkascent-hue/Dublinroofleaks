@@ -535,3 +535,16 @@ html.touch .in[data-reveal],html.touch .in[data-split],html.touch .in[data-clip]
 .field.err label{color:#c62828}.qform .field.err label{color:#ffb3b3}
 .field.err::after{content:"Required";display:block;font-size:.74rem;font-weight:700;color:#c62828;margin-top:5px}
 .qform .field.err::after{color:#ffb3b3}
+
+/* cookie banner */
+#cookiebar{position:fixed;left:16px;right:16px;bottom:16px;z-index:900;max-width:560px;margin-left:auto;background:rgba(4,20,47,.96);color:#fff;border:1px solid rgba(78,168,255,.35);border-radius:16px;padding:18px 20px;box-shadow:0 24px 60px -20px rgba(0,0,0,.7);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transform:translateY(140%);opacity:0;transition:transform .5s var(--ease),opacity .4s}
+#cookiebar.show{transform:none;opacity:1}
+#cookiebar p{font-size:.9rem;color:rgba(255,255,255,.85);max-width:none;line-height:1.55}
+#cookiebar p a{color:var(--blue-light);text-decoration:underline}
+#cookiebar .cb-btns{display:flex;gap:10px;margin-top:14px;justify-content:flex-end}
+#cookiebar .btn{padding:11px 20px;font-size:.88rem}
+html.cb-open .fcall{opacity:0;pointer-events:none}
+@media (max-width:600px){#cookiebar{left:10px;right:10px;bottom:10px;padding:16px}#cookiebar .cb-btns .btn{flex:1}}
+#cookiebar .btn-outline{background:transparent;color:#fff;border-color:rgba(255,255,255,.45)}
+#cookiebar .btn-outline::before{display:none}
+#cookiebar .btn-outline:hover{background:rgba(255,255,255,.08);color:#fff}

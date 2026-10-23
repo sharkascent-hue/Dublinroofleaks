@@ -10,7 +10,8 @@
     address: 'Long Mile Road, Dublin 12',
     googleReview: '',
     formEndpoint: 'https://api.web3forms.com/submit',
-    formKey: '4c5cc943-64d4-4b19-9a7c-8ee552e02b35' // Web3Forms access key; blank endpoint sends via the visitor's email app
+    formKey: '4c5cc943-64d4-4b19-9a7c-8ee552e02b35', // Web3Forms access key; blank endpoint sends via the visitor's email app
+    gaId: 'G-ZHNLRT6769' // Google Analytics 4; only loads after the visitor accepts cookies
   };
   /* ============================================================ */
   const html = document.documentElement;
@@ -236,7 +237,7 @@
     if (missing.length) { missing[0].focus(); return; }
     const btn = $('button[type=submit]', form); const orig = btn.innerHTML; btn.disabled = true; btn.textContent = 'Sending…';
     const data = {}; $$('input,select,textarea', form).forEach(i => { if (i.name && i.name !== 'website') data[i.name] = i.value; });
-    const ok = () => { const m = $('.ok', form); if (m) m.style.display = 'block'; form.reset(); $$('.field', form).forEach(f => f.classList.remove('err')); };
+    const ok = () => { track('generate_lead', { form_location: form.closest('.hero') ? 'hero' : 'contact_page', service: data.service || '' }); const m = $('.ok', form); if (m) m.style.display = 'block'; form.reset(); $$('.field', form).forEach(f => f.classList.remove('err')); };
     try {
       if (CONFIG.formEndpoint) { const payload = Object.assign({ access_key: CONFIG.formKey, subject: 'New quote request from ' + (data.name || 'website') + (data.service ? ' — ' + data.service : ''), from_name: 'Vantage Roof Repairs website', botcheck: '' }, data); const r = await fetch(CONFIG.formEndpoint, { method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }); const j = await r.json().catch(() => ({})); if (!r.ok || j.success === false) throw 0; ok(); }
       else { location.href = 'mailto:' + CONFIG.email + '?subject=' + encodeURIComponent('Quote request from ' + (data.name || 'website')) + '&body=' + encodeURIComponent(Object.keys(data).map(k => k + ': ' + data[k]).join('\n')); ok(); }
@@ -269,6 +270,46 @@
     document.addEventListener('visibilitychange', () => { if (document.hidden) run = false; else if (!opts.always) { run = true; if (!raf) raf = requestAnimationFrame(tick); } });
   }
   $$('.hero, .phero, .cta, section.dark, footer, .hs').forEach(sec => rainOn(sec));
+
+  /* ---------- analytics with cookie consent (loads nothing until accepted) ---------- */
+  const CK = 'vr_consent';
+  let gaOn = false;
+  function track(name, params) { if (gaOn && window.gtag) window.gtag('event', name, params || {}); }
+  function loadGA() {
+    if (gaOn || !CONFIG.gaId) return; gaOn = true;
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { dataLayer.push(arguments); };
+    gtag('consent', 'default', { ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', analytics_storage: 'granted' });
+    gtag('js', new Date()); gtag('config', CONFIG.gaId, { anonymize_ip: true });
+    const sc = document.createElement('script'); sc.async = true; sc.src = 'https://www.googletagmanager.com/gtag/js?id=' + CONFIG.gaId; document.head.appendChild(sc);
+  }
+  function getConsent() { try { return localStorage.getItem(CK); } catch (e) { return null; } }
+  function setConsent(v) { try { localStorage.setItem(CK, v); } catch (e) {} }
+  function banner() {
+    let b = $('#cookiebar'); if (b) { b.classList.add('show'); html.classList.add('cb-open'); return; }
+    b = document.createElement('div'); b.id = 'cookiebar'; b.setAttribute('role', 'dialog'); b.setAttribute('aria-label', 'Cookie choices');
+    b.innerHTML = '<p>We use Google Analytics cookies to see how people use this site, so we can improve it. Nothing loads unless you accept. <a href="/privacy-policy/">Privacy policy</a></p><div class="cb-btns"><button type="button" class="btn btn-outline" data-c="no">Decline</button><button type="button" class="btn btn-blue" data-c="yes">Accept</button></div>';
+    document.body.appendChild(b);
+    b.addEventListener('click', e => {
+      const c = e.target.closest('[data-c]'); if (!c) return;
+      const yes = c.dataset.c === 'yes'; setConsent(yes ? 'yes' : 'no');
+      b.classList.remove('show'); html.classList.remove('cb-open');
+      if (yes) loadGA(); else if (gaOn) { document.cookie.split(';').forEach(k => { const n = k.split('=')[0].trim(); if (/^_ga/.test(n)) { document.cookie = n + '=; Max-Age=0; path=/; domain=.' + location.hostname.replace(/^www\./, ''); document.cookie = n + '=; Max-Age=0; path=/'; } }); location.reload(); }
+    });
+    requestAnimationFrame(() => { b.classList.add('show'); html.classList.add('cb-open'); });
+  }
+  const consent = getConsent();
+  if (consent === 'yes') loadGA();
+  else if (consent !== 'no' && CONFIG.gaId) setTimeout(banner, html.classList.contains('intro') ? 3000 : 600);
+  $$('[data-cookie-settings]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); banner(); }));
+  /* conversions: phone, WhatsApp, email taps */
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href]'); if (!a) return;
+    const h = a.getAttribute('href') || '';
+    if (h.startsWith('tel:')) track('phone_call_click', { link_location: a.closest('.hero') ? 'hero' : a.closest('.nav') ? 'header' : a.closest('footer') ? 'footer' : a.classList.contains('fcall') ? 'floating_button' : 'page' });
+    else if (h.includes('wa.me')) track('whatsapp_click');
+    else if (h.startsWith('mailto:')) track('email_click');
+  }, true);
 
   /* press feedback */
   document.addEventListener('pointerdown', e => { const el = e.target.closest('.card, .step, .post, .val, .towns span, .rev'); if (!el) return; el.classList.add('pressed'); clearTimeout(el._pt); el._pt = setTimeout(() => el.classList.remove('pressed'), 900); }, { passive: true });
