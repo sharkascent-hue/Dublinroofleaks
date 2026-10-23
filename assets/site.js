@@ -9,7 +9,8 @@
     hours: 'Mon – Fri 9am – 5pm · Sat 9am – 4pm · Emergency call-outs 24/7',
     address: 'Long Mile Road, Dublin 12',
     googleReview: '',
-    formEndpoint: '' // e.g. 'https://formspree.io/f/xxxxxxx' — blank sends via the visitor's email app
+    formEndpoint: 'https://api.web3forms.com/submit',
+    formKey: '4c5cc943-64d4-4b19-9a7c-8ee552e02b35' // Web3Forms access key; blank endpoint sends via the visitor's email app
   };
   /* ============================================================ */
   const html = document.documentElement;
@@ -231,7 +232,7 @@
     const data = {}; $$('input,select,textarea', form).forEach(i => { if (i.name && i.name !== 'website') data[i.name] = i.value; });
     const ok = () => { const m = $('.ok', form); if (m) m.style.display = 'block'; form.reset(); };
     try {
-      if (CONFIG.formEndpoint) { const r = await fetch(CONFIG.formEndpoint, { method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }, body: JSON.stringify(data) }); if (!r.ok) throw 0; ok(); }
+      if (CONFIG.formEndpoint) { const payload = Object.assign({ access_key: CONFIG.formKey, subject: 'New quote request from ' + (data.name || 'website') + (data.service ? ' — ' + data.service : ''), from_name: 'Vantage Roof Repairs website', botcheck: '' }, data); const r = await fetch(CONFIG.formEndpoint, { method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }); const j = await r.json().catch(() => ({})); if (!r.ok || j.success === false) throw 0; ok(); }
       else { location.href = 'mailto:' + CONFIG.email + '?subject=' + encodeURIComponent('Quote request from ' + (data.name || 'website')) + '&body=' + encodeURIComponent(Object.keys(data).map(k => k + ': ' + data[k]).join('\n')); ok(); }
     } catch (err) { alert('Sorry, that did not send. Please call or WhatsApp us on ' + CONFIG.phone + '.'); }
     finally { btn.disabled = false; btn.innerHTML = orig; }
