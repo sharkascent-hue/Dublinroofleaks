@@ -310,6 +310,7 @@
     if (h.startsWith('tel:')) track('phone_call_click', { link_location: a.closest('.hero') ? 'hero' : a.closest('.nav') ? 'header' : a.closest('footer') ? 'footer' : a.classList.contains('fcall') ? 'floating_button' : 'page' });
     else if (h.includes('wa.me')) track('whatsapp_click');
     else if (h.includes('maps.app.goo.gl')) track('google_profile_click');
+    else if (h.includes('facebook.com')) track('facebook_click');
     else if (h.startsWith('mailto:')) track('email_click');
   }, true);
 
