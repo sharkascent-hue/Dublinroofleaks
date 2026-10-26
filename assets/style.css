@@ -550,3 +550,14 @@ html.cb-open .fcall{opacity:0;pointer-events:none}
 #cookiebar .btn-outline:hover{background:rgba(255,255,255,.08);color:#fff}
 .rev span.gl svg{color:#f6b63c}
 .rev p{font-size:1.02rem}
+
+/* hero Google rating badge */
+.gbadge{display:flex;width:fit-content;max-width:100%;align-items:center;gap:10px;padding:9px 18px 9px 14px;margin-bottom:20px;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.24);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#fff;transition:background .3s,transform .35s var(--ease),border-color .3s;box-shadow:0 12px 30px -16px rgba(0,0,0,.6)}
+.gbadge:hover{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.4);transform:translateY(-2px)}
+.gbadge .gst{color:#f6b63c;font-size:1rem;letter-spacing:.08em;line-height:1}
+.gbadge b{font-family:var(--serif);font-size:1.15rem;font-weight:500;line-height:1}
+.gbadge small{font-size:.82rem;font-weight:600;color:rgba(255,255,255,.82);white-space:nowrap}
+@media (max-width:380px){.gbadge{gap:8px;padding:8px 14px 8px 12px}.gbadge small{font-size:.76rem}}
+/* footer credit matches the muted copyright line */
+.fbottom a.credit{color:inherit}
+.fbottom a.credit:hover{color:rgba(255,255,255,.8);text-decoration:underline}

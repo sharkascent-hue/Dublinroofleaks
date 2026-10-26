@@ -89,6 +89,7 @@
     const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
     const h = $('h1', hero);
     if (h) { if (touch) tl.from(h, { opacity: 0, y: 26, duration: 0.9, clearProps: 'all' }, 0.1); else tl.from(splitWords(h), { yPercent: 110, duration: 1, stagger: 0.045, clearProps: 'all' }, 0); }
+    const gb = $('.gbadge', hero); if (gb) tl.from(gb, { opacity: 0, y: -12, scale: 0.96, duration: 0.7, clearProps: 'all' }, 0);
     const eb = $('.eyebrow, .crumb', hero); if (eb) tl.from(eb, { opacity: 0, x: -20, duration: 0.8, clearProps: 'all' }, 0.1);
     const lead = $('.lead', hero); if (lead) tl.from(lead, { opacity: 0, y: 20, duration: 0.9, clearProps: 'all' }, 0.45);
     const btns = $$('.btn-row .btn', hero); if (btns.length) tl.from(btns, { opacity: 0, y: 16, duration: 0.7, stagger: 0.1, clearProps: 'all' }, 0.6);
@@ -308,6 +309,7 @@
     const h = a.getAttribute('href') || '';
     if (h.startsWith('tel:')) track('phone_call_click', { link_location: a.closest('.hero') ? 'hero' : a.closest('.nav') ? 'header' : a.closest('footer') ? 'footer' : a.classList.contains('fcall') ? 'floating_button' : 'page' });
     else if (h.includes('wa.me')) track('whatsapp_click');
+    else if (h.includes('maps.app.goo.gl')) track('google_profile_click');
     else if (h.startsWith('mailto:')) track('email_click');
   }, true);
 
