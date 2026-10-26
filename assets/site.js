@@ -5,7 +5,7 @@
   var CONFIG = {
     phone: '087 466 6010', phoneHref: 'tel:+353874666010',
     whatsapp: 'https://wa.me/353874666010',
-    email: 'vantageroofingdublin@gmail.com',
+    email: 'sales.vantageroofing@gmail.com',
     hours: 'Mon – Fri 9am – 5pm · Sat 9am – 4pm · Emergency call-outs 24/7',
     address: 'Long Mile Road, Dublin 12',
     googleReview: '',
