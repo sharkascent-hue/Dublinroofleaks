@@ -231,13 +231,14 @@
   $$('form.qf').forEach(form => form.addEventListener('submit', async e => {
     e.preventDefault();
     if ($('.hp input', form) && $('.hp input', form).value) return;
-    const missing = $$('[required]', form).filter(i => !i.value.trim() || (i.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(i.value)) || (i.type === 'tel' && i.value.replace(/\D/g, '').length < 7));
+    const badEmail = i => i.type === 'email' && i.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(i.value.trim());
+    const missing = $$('input,select,textarea', form).filter(i => i.name !== 'website' && ((i.required && !i.value.trim()) || badEmail(i) || (i.type === 'tel' && i.value.replace(/\D/g, '').length < 7)));
     $$('.field', form).forEach(f => f.classList.remove('err'));
     missing.forEach(i => i.closest('.field') && i.closest('.field').classList.add('err'));
     const fe = $('.ferr', form); if (fe) fe.style.display = missing.length ? 'block' : 'none';
     if (missing.length) { missing[0].focus(); return; }
     const btn = $('button[type=submit]', form); const orig = btn.innerHTML; btn.disabled = true; btn.textContent = 'Sending…';
-    const data = {}; $$('input,select,textarea', form).forEach(i => { if (i.name && i.name !== 'website') data[i.name] = i.value; });
+    const data = {}; $$('input,select,textarea', form).forEach(i => { if (i.name && i.name !== 'website' && i.value.trim()) data[i.name] = i.value; });
     const ok = () => { track('generate_lead', { form_location: form.closest('.hero') ? 'hero' : 'contact_page', service: data.service || '' }); const m = $('.ok', form); if (m) m.style.display = 'block'; form.reset(); $$('.field', form).forEach(f => f.classList.remove('err')); };
     try {
       if (CONFIG.formEndpoint) { const payload = Object.assign({ access_key: CONFIG.formKey, subject: 'New quote request from ' + (data.name || 'website') + (data.service ? ' — ' + data.service : ''), from_name: 'Vantage Roof Repairs website', botcheck: '' }, data); const r = await fetch(CONFIG.formEndpoint, { method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }); const j = await r.json().catch(() => ({})); if (!r.ok || j.success === false) throw new Error((j && j.message) || ('HTTP ' + r.status)); ok(); }
@@ -289,7 +290,7 @@
   function banner() {
     let b = $('#cookiebar'); if (b) { b.classList.add('show'); html.classList.add('cb-open'); return; }
     b = document.createElement('div'); b.id = 'cookiebar'; b.setAttribute('role', 'dialog'); b.setAttribute('aria-label', 'Cookie choices');
-    b.innerHTML = '<p>We use Google Analytics cookies to see how people use this site, so we can improve it. Nothing loads unless you accept. <a href="/privacy-policy/">Privacy policy</a></p><div class="cb-btns"><button type="button" class="btn btn-outline" data-c="no">Decline</button><button type="button" class="btn btn-blue" data-c="yes">Accept</button></div>';
+    b.innerHTML = '<p>We use Google Analytics cookies to see how people use this site<span class="cb-l">, so we can improve it. Nothing loads unless you accept</span>. <a href="/privacy-policy/">Privacy policy</a></p><div class="cb-btns"><button type="button" class="btn btn-outline" data-c="no">Decline</button><button type="button" class="btn btn-blue" data-c="yes">Accept</button></div>';
     document.body.appendChild(b);
     b.addEventListener('click', e => {
       const c = e.target.closest('[data-c]'); if (!c) return;

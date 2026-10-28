@@ -561,3 +561,6 @@ html.cb-open .fcall{opacity:0;pointer-events:none}
 /* footer credit matches the muted copyright line */
 .fbottom a.credit{color:inherit}
 .fbottom a.credit:hover{color:rgba(255,255,255,.8);text-decoration:underline}
+
+/* mobile cookie bar: slim strip at the top so it never covers the call/quote buttons */
+@media (max-width:600px){#cookiebar{top:8px;bottom:auto;left:8px;right:8px;max-width:none;padding:10px 12px;border-radius:12px;display:flex;align-items:center;gap:10px;transform:translateY(-160%)}#cookiebar.show{transform:none}#cookiebar p{font-size:.76rem;line-height:1.35;flex:1}#cookiebar .cb-l{display:none}#cookiebar .cb-btns{margin:0;flex:none;gap:6px}#cookiebar .cb-btns .btn{flex:none;padding:8px 12px;font-size:.78rem}html.cb-open .fcall{opacity:1;pointer-events:auto}}
