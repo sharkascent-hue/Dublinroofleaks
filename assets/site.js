@@ -240,9 +240,9 @@
     const data = {}; $$('input,select,textarea', form).forEach(i => { if (i.name && i.name !== 'website') data[i.name] = i.value; });
     const ok = () => { track('generate_lead', { form_location: form.closest('.hero') ? 'hero' : 'contact_page', service: data.service || '' }); const m = $('.ok', form); if (m) m.style.display = 'block'; form.reset(); $$('.field', form).forEach(f => f.classList.remove('err')); };
     try {
-      if (CONFIG.formEndpoint) { const payload = Object.assign({ access_key: CONFIG.formKey, subject: 'New quote request from ' + (data.name || 'website') + (data.service ? ' — ' + data.service : ''), from_name: 'Vantage Roof Repairs website', botcheck: '' }, data); const r = await fetch(CONFIG.formEndpoint, { method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }); const j = await r.json().catch(() => ({})); if (!r.ok || j.success === false) throw 0; ok(); }
+      if (CONFIG.formEndpoint) { const payload = Object.assign({ access_key: CONFIG.formKey, subject: 'New quote request from ' + (data.name || 'website') + (data.service ? ' — ' + data.service : ''), from_name: 'Vantage Roof Repairs website', botcheck: '' }, data); const r = await fetch(CONFIG.formEndpoint, { method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }); const j = await r.json().catch(() => ({})); if (!r.ok || j.success === false) throw new Error((j && j.message) || ('HTTP ' + r.status)); ok(); }
       else { location.href = 'mailto:' + CONFIG.email + '?subject=' + encodeURIComponent('Quote request from ' + (data.name || 'website')) + '&body=' + encodeURIComponent(Object.keys(data).map(k => k + ': ' + data[k]).join('\n')); ok(); }
-    } catch (err) { alert('Sorry, that did not send. Please call or WhatsApp us on ' + CONFIG.phone + '.'); }
+    } catch (err) { console.error('Form send failed:', err); alert('Sorry, that did not send' + (err && err.message ? ' (' + err.message + ')' : '') + '. Please call or WhatsApp us on ' + CONFIG.phone + '.'); }
     finally { btn.disabled = false; btn.innerHTML = orig; }
   }));
 
