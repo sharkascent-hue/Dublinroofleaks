@@ -11,7 +11,7 @@
     googleReview: '',
     formEndpoint: 'https://api.web3forms.com/submit',
     formKey: '4c5cc943-64d4-4b19-9a7c-8ee552e02b35', // Web3Forms access key; blank endpoint sends via the visitor's email app
-    gaId: 'G-ZHNLRT6769' // Google Analytics 4; only loads after the visitor accepts cookies
+    gaId: 'G-ZHNLRT6769' // Google Analytics 4 in Consent Mode v2: cookies only after Accept
   };
   /* ============================================================ */
   const html = document.documentElement;
@@ -85,7 +85,7 @@
     if (heroDone) return; heroDone = true;
     const hero = $('.hero, .phero'); if (!hero) return;
     $$('video', hero).forEach(v => v.play().catch(() => {}));
-    if (!G || reduce) return;
+    if (!G || reduce || innerWidth <= 760) return;
     const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
     const h = $('h1', hero);
     if (h) { if (touch) tl.from(h, { opacity: 0, y: 26, duration: 0.9, clearProps: 'all' }, 0.1); else tl.from(splitWords(h), { yPercent: 110, duration: 1, stagger: 0.045, clearProps: 'all' }, 0); }
@@ -169,15 +169,8 @@
   }
   $$('[data-qtoggle]').forEach(b => b.addEventListener('click', e => { e.preventDefault(); openQuote(b.closest('.nav') || b.closest('.menu')); if (menu && menu.classList.contains('open')) burger.click(); }));
 
-  /* cursor + magnetic */
+  /* magnetic buttons (desktop) */
   if (fine && G && !reduce) {
-    const c = $('.cursor'), r = $('.cursor-ring');
-    if (c && r) {
-      const cx = gsap.quickTo(c, 'x', { duration: 0.12 }), cy = gsap.quickTo(c, 'y', { duration: 0.12 });
-      const rx = gsap.quickTo(r, 'x', { duration: 0.4, ease: 'power3' }), ry = gsap.quickTo(r, 'y', { duration: 0.4, ease: 'power3' });
-      addEventListener('mousemove', e => { html.classList.add('cur'); cx(e.clientX); cy(e.clientY); rx(e.clientX); ry(e.clientY); });
-      document.addEventListener('mouseover', e => { const v = e.target.closest('[data-cursor="view"]'); const h = e.target.closest('a, button, input, select, textarea, .compare'); r.classList.toggle('view', !!v); r.classList.toggle('hover', !!h && !v); });
-    }
     $$('.btn-blue, .btn-navy, .btn-white').forEach(b => {
       const xt = gsap.quickTo(b, 'x', { duration: 0.4, ease: 'power3' }), yt = gsap.quickTo(b, 'y', { duration: 0.4, ease: 'power3' });
       b.addEventListener('mousemove', e => { const rc = b.getBoundingClientRect(); xt((e.clientX - rc.left - rc.width / 2) * 0.25); yt((e.clientY - rc.top - rc.height / 2) * 0.35); });
@@ -239,7 +232,7 @@
     if (missing.length) { missing[0].focus(); return; }
     const btn = $('button[type=submit]', form); const orig = btn.innerHTML; btn.disabled = true; btn.textContent = 'Sending…';
     const data = {}; $$('input,select,textarea', form).forEach(i => { if (i.name && i.name !== 'website' && i.value.trim()) data[i.name] = i.value; });
-    const ok = () => { track('generate_lead', { form_location: form.closest('.hero') ? 'hero' : 'contact_page', service: data.service || '' }); const m = $('.ok', form); if (m) m.style.display = 'block'; form.reset(); $$('.field', form).forEach(f => f.classList.remove('err')); };
+    const ok = () => { track('generate_lead', { form_location: form.closest('.hero') ? 'hero' : 'contact_page', service: data.service || '' }); const m = $('.ok', form); if (m) m.style.display = 'block'; try { m.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {} form.reset(); $$('.field', form).forEach(f => f.classList.remove('err')); };
     try {
       if (CONFIG.formEndpoint) { const payload = Object.assign({ access_key: CONFIG.formKey, subject: 'New quote request from ' + (data.name || 'website') + (data.service ? ' — ' + data.service : ''), from_name: 'Vantage Roof Repairs website', botcheck: '' }, data); const r = await fetch(CONFIG.formEndpoint, { method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }); const j = await r.json().catch(() => ({})); if (!r.ok || j.success === false) throw new Error((j && j.message) || ('HTTP ' + r.status)); ok(); }
       else { location.href = 'mailto:' + CONFIG.email + '?subject=' + encodeURIComponent('Quote request from ' + (data.name || 'website')) + '&body=' + encodeURIComponent(Object.keys(data).map(k => k + ': ' + data[k]).join('\n')); ok(); }
@@ -250,7 +243,7 @@
   /* rain on dark sections */
   function rainOn(sec, opts) {
     opts = opts || {};
-    if (reduce || $('.bgfx', sec)) return;
+    if (reduce || (innerWidth <= 760 && !opts.always) || $('.bgfx', sec)) return;
     const fx = document.createElement('div'); fx.className = 'bgfx'; fx.setAttribute('aria-hidden', 'true');
     const cv = document.createElement('canvas'); fx.appendChild(cv);
     if (getComputedStyle(sec).position === 'static') sec.style.position = 'relative';
@@ -273,36 +266,38 @@
   }
   $$('.hero, .phero, .cta, section.dark, footer, .hs').forEach(sec => rainOn(sec));
 
-  /* ---------- analytics with cookie consent (loads nothing until accepted) ---------- */
+  /* ---------- analytics in Google Consent Mode v2: cookies only after Accept; anonymous cookieless pings otherwise ---------- */
   const CK = 'vr_consent';
   let gaOn = false;
-  function track(name, params) { if (gaOn && window.gtag) window.gtag('event', name, params || {}); }
-  function loadGA() {
+  function track(name, params) { if (window.gtag) window.gtag('event', name, params || {}); }
+  function initGA() {
     if (gaOn || !CONFIG.gaId) return; gaOn = true;
     window.dataLayer = window.dataLayer || [];
     window.gtag = function () { dataLayer.push(arguments); };
-    gtag('consent', 'default', { ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', analytics_storage: 'granted' });
+    gtag('consent', 'default', { ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', analytics_storage: getConsent() === 'yes' ? 'granted' : 'denied' });
     gtag('js', new Date()); gtag('config', CONFIG.gaId, { anonymize_ip: true });
-    const sc = document.createElement('script'); sc.async = true; sc.src = 'https://www.googletagmanager.com/gtag/js?id=' + CONFIG.gaId; document.head.appendChild(sc);
+    const add = () => { const sc = document.createElement('script'); sc.async = true; sc.src = 'https://www.googletagmanager.com/gtag/js?id=' + CONFIG.gaId; document.head.appendChild(sc); };
+    if (document.readyState === 'complete') setTimeout(add, 800); else addEventListener('load', () => setTimeout(add, 800));
   }
   function getConsent() { try { return localStorage.getItem(CK); } catch (e) { return null; } }
   function setConsent(v) { try { localStorage.setItem(CK, v); } catch (e) {} }
   function banner() {
     let b = $('#cookiebar'); if (b) { b.classList.add('show'); html.classList.add('cb-open'); return; }
     b = document.createElement('div'); b.id = 'cookiebar'; b.setAttribute('role', 'dialog'); b.setAttribute('aria-label', 'Cookie choices');
-    b.innerHTML = '<p>We use Google Analytics cookies to see how people use this site<span class="cb-l">, so we can improve it. Nothing loads unless you accept</span>. <a href="/privacy-policy/">Privacy policy</a></p><div class="cb-btns"><button type="button" class="btn btn-outline" data-c="no">Decline</button><button type="button" class="btn btn-blue" data-c="yes">Accept</button></div>';
+    b.innerHTML = '<p>We use Google Analytics cookies to see how people use this site<span class="cb-l">. If you decline, only anonymous, cookie-free visit counts are sent</span>. <a href="/privacy-policy/">Privacy policy</a></p><div class="cb-btns"><button type="button" class="btn btn-outline" data-c="no">Decline</button><button type="button" class="btn btn-blue" data-c="yes">Accept</button></div>';
     document.body.appendChild(b);
     b.addEventListener('click', e => {
       const c = e.target.closest('[data-c]'); if (!c) return;
       const yes = c.dataset.c === 'yes'; setConsent(yes ? 'yes' : 'no');
       b.classList.remove('show'); html.classList.remove('cb-open');
-      if (yes) loadGA(); else if (gaOn) { document.cookie.split(';').forEach(k => { const n = k.split('=')[0].trim(); if (/^_ga/.test(n)) { document.cookie = n + '=; Max-Age=0; path=/; domain=.' + location.hostname.replace(/^www\./, ''); document.cookie = n + '=; Max-Age=0; path=/'; } }); location.reload(); }
+      if (window.gtag) window.gtag('consent', 'update', { analytics_storage: yes ? 'granted' : 'denied' });
+      if (!yes) document.cookie.split(';').forEach(k => { const n = k.split('=')[0].trim(); if (/^_ga/.test(n)) { document.cookie = n + '=; Max-Age=0; path=/; domain=.' + location.hostname.replace(/^www\./, ''); document.cookie = n + '=; Max-Age=0; path=/'; } });
     });
     requestAnimationFrame(() => { b.classList.add('show'); html.classList.add('cb-open'); });
   }
   const consent = getConsent();
-  if (consent === 'yes') loadGA();
-  else if (consent !== 'no' && CONFIG.gaId) setTimeout(banner, html.classList.contains('intro') ? 3000 : 600);
+  initGA();
+  if (consent !== 'yes' && consent !== 'no' && CONFIG.gaId) setTimeout(banner, html.classList.contains('intro') ? 3000 : 600);
   $$('[data-cookie-settings]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); banner(); }));
   /* conversions: phone, WhatsApp, email taps */
   document.addEventListener('click', e => {
