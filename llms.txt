@@ -26,11 +26,12 @@
 - Inspections, maintenance & moss removal: Know what state your roof is in before you decide anything. Inspections, preventative maintenance visits and gentle moss removal.
 
 ## Areas we cover
-- North Dublin: Clontarf, Raheny, Artane, Killester, Marino, Fairview, Drumcondra, Glasnevin, Phibsborough, Finglas, Santry, Beaumont, Coolock, Ballymun, Whitehall
-- North County Dublin: Swords, Malahide, Portmarnock, Sutton, Howth, Baldoyle, Donabate, Skerries, Rush, Lusk, Balbriggan
-- West Dublin: Walkinstown, Crumlin, Drimnagh, Inchicore, Ballyfermot, Palmerstown, Clondalkin, Lucan, Blanchardstown, Castleknock, Tallaght, Firhouse, Templeogue, Kimmage, Saggart, Citywest
-- South Dublin: Rathfarnham, Terenure, Rathgar, Rathmines, Ranelagh, Harold’s Cross, Ballsbridge, Donnybrook, Sandymount, Ringsend, Milltown, Dundrum, Churchtown, Sandyford, Stillorgan, Blackrock, Booterstown, Monkstown, Dún Laoghaire, Dalkey, Killiney, Cabinteely, Foxrock, Shankill
-- Nearby counties: Celbridge, Leixlip, Maynooth, Naas, Ashbourne, Dunboyne, Ratoath, Bray, Greystones
+- Dublin postal districts: Dublin 1, Dublin 2, Dublin 3, Dublin 4, Dublin 5, Dublin 6, Dublin 7, Dublin 8, Dublin 9, Dublin 10, Dublin 11, Dublin 12, Dublin 13, Dublin 14, Dublin 15, Dublin 16, Dublin 17, Dublin 18, Dublin 20, Dublin 22, Dublin 24
+- North Dublin: Clontarf, Raheny, Artane, Killester, Marino, Fairview, Drumcondra, Glasnevin, Phibsborough, Finglas, Santry, Beaumont, Coolock, Ballymun, Whitehall, Donaghmede, Kilbarrack
+- North County Dublin: Swords, Malahide, Portmarnock, Sutton, Howth, Baldoyle, Clongriffin, Donabate, Skerries, Rush, Lusk, Balbriggan, Kinsealy
+- West Dublin: Walkinstown, Crumlin, Drimnagh, Inchicore, Ballyfermot, Palmerstown, Clondalkin, Lucan, Blanchardstown, Castleknock, Clonsilla, Mulhuddart, Tallaght, Firhouse, Templeogue, Kimmage, Saggart, Citywest, Rathcoole, Adamstown
+- South Dublin: Rathfarnham, Terenure, Rathgar, Rathmines, Ranelagh, Harold’s Cross, Ballsbridge, Donnybrook, Sandymount, Ringsend, Milltown, Dundrum, Churchtown, Sandyford, Stillorgan, Leopardstown, Blackrock, Booterstown, Monkstown, Dún Laoghaire, Sallynoggin, Glenageary, Dalkey, Killiney, Cabinteely, Foxrock, Shankill
+- Dublin city centre: City Centre, Stoneybatter, Smithfield, The Liberties, Portobello, Docklands, Grand Canal Dock
 
 ## How we work
 1. You tell us what the roof is doing, ideally with photos.
