@@ -1,5 +1,12 @@
 @font-face{font-family:'Fraunces';font-style:normal;font-weight:400 600;font-display:swap;src:url(fraunces.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
 @font-face{font-family:'Manrope';font-style:normal;font-weight:400 800;font-display:swap;src:url(manrope.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Manrope Fb A';src:local('Arial'),local('ArialMT'),local('Liberation Sans');font-weight:400 500;size-adjust:102.5%;ascent-override:104%;descent-override:29.3%;line-gap-override:0%}
+@font-face{font-family:'Manrope Fb A';src:local('Arial Bold'),local('Arial-BoldMT'),local('Liberation Sans Bold');font-weight:600 800;size-adjust:101%;ascent-override:105.5%;descent-override:29.7%;line-gap-override:0%}
+@font-face{font-family:'Manrope Fb R';src:local('Roboto');font-weight:400 500;size-adjust:103.5%;ascent-override:103%;descent-override:29%;line-gap-override:0%}
+@font-face{font-family:'Manrope Fb R';src:local('Roboto Bold'),local('Roboto-Bold');font-weight:600 800;size-adjust:106%;ascent-override:100.6%;descent-override:28.3%;line-gap-override:0%}
+@font-face{font-family:'Fraunces Fb T';src:local('Times New Roman'),local('TimesNewRomanPSMT'),local('Liberation Serif');font-weight:400 600;size-adjust:108.5%;ascent-override:90.1%;descent-override:23.5%;line-gap-override:0%}
+@font-face{font-family:'Fraunces Fb N';src:local('Noto Serif');font-weight:400 600;size-adjust:93.5%;ascent-override:104.6%;descent-override:27.3%;line-gap-override:0%}
+@media (max-width:760px){@font-face{font-family:'Fraunces Fb T';src:local('Times New Roman'),local('TimesNewRomanPSMT'),local('Liberation Serif');font-weight:400 600;size-adjust:113.5%;ascent-override:86.2%;descent-override:22.5%;line-gap-override:0%}@font-face{font-family:'Fraunces Fb N';src:local('Noto Serif');font-weight:400 600;size-adjust:96.5%;ascent-override:101.3%;descent-override:26.4%;line-gap-override:0%}}
 /* ==========================================================
    Vantage Roof Repairs — shared stylesheet
    ========================================================== */
@@ -8,8 +15,8 @@
   --blue:#1479e0; --blue-light:#4ea8ff; --blue-dark:#0d5db3; --ice:#a9d4ff;
   --sky:#eef3fa; --paper:#f6f8fc; --white:#fff;
   --ink:#0e1a2e; --body:#2e3d55; --muted:#64728a; --line:#dde5f0;
-  --serif:'Fraunces', Georgia, 'Times New Roman', serif;
-  --sans:'Manrope', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --serif:'Fraunces','Fraunces Fb T','Fraunces Fb N', Georgia, 'Times New Roman', serif;
+  --sans:'Manrope','Manrope Fb A','Manrope Fb R', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --r:18px; --shadow:0 24px 60px -24px rgba(4,20,47,.45);
   --w:1200px; --ease:cubic-bezier(.22,.8,.2,1);
 }
@@ -555,11 +562,15 @@ html.touch .in[data-reveal],html.touch .in[data-split],html.touch .in[data-clip]
 .fbottom a.credit{color:inherit}
 .fbottom a.credit:hover{color:rgba(255,255,255,.8);text-decoration:underline}
 
-/* mobile cookie bar: slim strip at the top so it never covers the call/quote buttons */
-@media (max-width:600px){#cookiebar{top:8px;bottom:auto;left:8px;right:8px;max-width:none;padding:10px 12px;border-radius:12px;display:flex;align-items:center;gap:10px;transform:translateY(-160%)}#cookiebar.show{transform:none}#cookiebar p{font-size:.76rem;line-height:1.35;flex:1}#cookiebar .cb-l{display:none}#cookiebar .cb-btns{margin:0;flex:none;gap:6px}#cookiebar .cb-btns .btn{flex:none;padding:8px 12px;font-size:.78rem}}
+#cookiebar .cb-m{display:none}
+/* mobile cookie bar: slim bar at the bottom, below the hero buttons; the floating call button lifts above it */
+@media (max-width:600px){#cookiebar{top:auto;bottom:8px;left:8px;right:8px;max-width:none;padding:8px 10px 8px 12px;border-radius:12px;display:flex;align-items:center;gap:8px}#cookiebar p{font-size:.74rem;line-height:1.3;flex:1}#cookiebar .cb-d{display:none}#cookiebar .cb-m{display:inline}#cookiebar .cb-btns{margin:0;flex:none;gap:6px}#cookiebar .cb-btns .btn{flex:none;padding:7px 11px;font-size:.76rem}html.cb-open .fcall{bottom:64px}}
 
 /* mobile hero: WebP image paints first, video fades in after load; marquee paused */
 @media (max-width:760px){.hero .mbg img,.hero .mbg video{position:absolute;inset:0}.hero .mbg video{opacity:0;transition:opacity .8s ease}.hero .mbg video.on{opacity:1}.marquee .track{animation:none}}
 /* cookie bar: bottom-left on tablets (call button sits right), bottom-right on desktop (hero buttons sit left) */
 @media (min-width:601px) and (max-width:760px){#cookiebar{left:16px;right:auto;margin-left:0;width:min(440px,calc(100vw - 210px))}}
 @media (min-width:761px){#cookiebar{left:auto;right:16px;margin-left:0;width:440px}}
+
+.fcall{opacity:0;pointer-events:none;transform:translateY(14px);transition:opacity .25s ease,transform .25s ease,bottom .25s ease}.fcall.show{opacity:1;pointer-events:auto;transform:none}
+@media (max-width:760px) and (max-height:720px){.hero{padding-top:92px}.hero h1{font-size:2.1rem}.hero .gbadge{margin-bottom:14px}.hero .lead{font-size:.94rem;margin:12px 0 18px}.hero .btn-row .btn{padding-top:14px;padding-bottom:14px}}

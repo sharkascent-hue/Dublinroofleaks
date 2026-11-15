@@ -153,6 +153,8 @@
     if (lenis) open ? lenis.stop() : lenis.start(); else document.body.style.overflow = open ? 'hidden' : '';
   });
   addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  const fcall = $('.fcall'), heroEl = $('.hero, .phero');
+  if (fcall) { if (!heroEl) fcall.classList.add('show'); else { const upd = () => fcall.classList.toggle('show', heroEl.getBoundingClientRect().bottom < 0); addEventListener('scroll', upd, { passive: true }); upd(); } }
   const page = document.body.dataset.page;
   $$('.links a, .menu a').forEach(a => { if (a.dataset.nav === page) a.classList.add('on'); });
   $$('a[href^="#"]').forEach(a => a.addEventListener('click', e => { const t = $(a.getAttribute('href')); if (t) { e.preventDefault(); scrollTo(t); } }));
@@ -284,7 +286,7 @@
   function banner() {
     let b = $('#cookiebar'); if (b) { b.classList.add('show'); html.classList.add('cb-open'); return; }
     b = document.createElement('div'); b.id = 'cookiebar'; b.setAttribute('role', 'dialog'); b.setAttribute('aria-label', 'Cookie choices');
-    b.innerHTML = '<p>We use Google Analytics cookies to see how people use this site<span class="cb-l">. If you decline, only anonymous, cookie-free visit counts are sent</span>. <a href="/privacy-policy/">Privacy policy</a></p><div class="cb-btns"><button type="button" class="btn btn-outline" data-c="no">Decline</button><button type="button" class="btn btn-blue" data-c="yes">Accept</button></div>';
+    b.innerHTML = '<p><span class="cb-d">We use Google Analytics cookies to see how people use this site. If you decline, only anonymous, cookie-free visit counts are sent.</span><span class="cb-m">We use analytics cookies.</span> <a href="/privacy-policy/">Privacy policy</a></p><div class="cb-btns"><button type="button" class="btn btn-outline" data-c="no">Decline</button><button type="button" class="btn btn-blue" data-c="yes">Accept</button></div>';
     document.body.appendChild(b);
     b.addEventListener('click', e => {
       const c = e.target.closest('[data-c]'); if (!c) return;
