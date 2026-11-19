@@ -153,23 +153,21 @@
     if (lenis) open ? lenis.stop() : lenis.start(); else document.body.style.overflow = open ? 'hidden' : '';
   });
   addEventListener('scroll', onScroll, { passive: true }); onScroll();
-  const fcall = $('.fcall'), heroEl = $('.hero, .phero');
-  if (fcall) { if (!heroEl) fcall.classList.add('show'); else { const upd = () => fcall.classList.toggle('show', heroEl.getBoundingClientRect().bottom < 0); addEventListener('scroll', upd, { passive: true }); upd(); } }
   const page = document.body.dataset.page;
   $$('.links a, .menu a').forEach(a => { if (a.dataset.nav === page) a.classList.add('on'); });
   $$('a[href^="#"]').forEach(a => a.addEventListener('click', e => { const t = $(a.getAttribute('href')); if (t) { e.preventDefault(); scrollTo(t); } }));
 
-  /* quote dropdown */
-  const qd = $('#qdrop');
-  function openQuote(scroll) {
-    if (!qd) return false;
-    const open = !qd.classList.contains('open');
-    qd.classList.toggle('open', open);
-    $$('[data-qtoggle]').forEach(b => { b.classList.toggle('open', open); b.setAttribute('aria-expanded', open); });
-    if (open) setTimeout(() => { const f = $('input', qd); if (f && fine) f.focus({ preventScroll: true }); if (scroll) scrollTo(qd, -110); }, 350);
-    return true;
+  /* narrow phones: shorter first option so the select label fits */
+  if (innerWidth < 400) $$('select[name=service] option[value=""]').forEach(o => { if (/optional/.test(o.textContent) && $('.hform')) o.textContent = 'Service'; });
+  /* quote form is always open in the hero: "Get a quote" buttons jump to it */
+  function goQuote(e) {
+    const f = $('#quote'); if (!f) return;
+    if (e) e.preventDefault();
+    if (menu && menu.classList.contains('open')) burger.click();
+    scrollTo(f, -100);
+    const i = $('input', f); if (i && fine) setTimeout(() => i.focus({ preventScroll: true }), 500);
   }
-  $$('[data-qtoggle]').forEach(b => b.addEventListener('click', e => { e.preventDefault(); openQuote(b.closest('.nav') || b.closest('.menu')); if (menu && menu.classList.contains('open')) burger.click(); }));
+  $$('[data-quote]').forEach(b => b.addEventListener('click', goQuote));
 
   /* magnetic buttons (desktop) */
   if (fine && G && !reduce) {
@@ -234,7 +232,7 @@
     if (missing.length) { missing[0].focus(); return; }
     const btn = $('button[type=submit]', form); const orig = btn.innerHTML; btn.disabled = true; btn.textContent = 'Sending…';
     const data = {}; $$('input,select,textarea', form).forEach(i => { if (i.name && i.name !== 'website' && i.value.trim()) data[i.name] = i.value; });
-    const ok = () => { track('generate_lead', { form_location: form.closest('.hero') ? 'hero' : 'contact_page', service: data.service || '' }); const m = $('.ok', form); if (m) m.style.display = 'block'; try { m.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {} form.reset(); $$('.field', form).forEach(f => f.classList.remove('err')); };
+    const ok = () => { track('generate_lead', { form_location: form.closest('.hero') ? 'hero' : 'contact_page', page_path: location.pathname, service: data.service || '' }); const m = $('.ok', form); if (m) form.classList.add('sent'); m.style.display = 'block'; try { m.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {} form.reset(); $$('.field', form).forEach(f => f.classList.remove('err')); };
     try {
       if (CONFIG.formEndpoint) { const payload = Object.assign({ access_key: CONFIG.formKey, subject: 'New quote request from ' + (data.name || 'website') + (data.service ? ' — ' + data.service : ''), from_name: 'Vantage Roof Repairs website', botcheck: '' }, data); const r = await fetch(CONFIG.formEndpoint, { method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }); const j = await r.json().catch(() => ({})); if (!r.ok || j.success === false) throw new Error((j && j.message) || ('HTTP ' + r.status)); ok(); }
       else { location.href = 'mailto:' + CONFIG.email + '?subject=' + encodeURIComponent('Quote request from ' + (data.name || 'website')) + '&body=' + encodeURIComponent(Object.keys(data).map(k => k + ': ' + data[k]).join('\n')); ok(); }
@@ -286,7 +284,7 @@
   function banner() {
     let b = $('#cookiebar'); if (b) { b.classList.add('show'); html.classList.add('cb-open'); return; }
     b = document.createElement('div'); b.id = 'cookiebar'; b.setAttribute('role', 'dialog'); b.setAttribute('aria-label', 'Cookie choices');
-    b.innerHTML = '<p><span class="cb-d">We use Google Analytics cookies to see how people use this site. If you decline, only anonymous, cookie-free visit counts are sent.</span><span class="cb-m">We use analytics cookies.</span> <a href="/privacy-policy/">Privacy policy</a></p><div class="cb-btns"><button type="button" class="btn btn-outline" data-c="no">Decline</button><button type="button" class="btn btn-blue" data-c="yes">Accept</button></div>';
+    b.innerHTML = '<p><span class="cb-d">We use Google Analytics cookies to see how people use this site. If you decline, only anonymous, cookie-free visit counts are sent.</span><span class="cb-m">We use analytics cookies.</span> <a href="/privacy-policy/"><span class="cb-d">Privacy policy</span><span class="cb-m">Privacy</span></a></p><div class="cb-btns"><button type="button" class="btn btn-outline" data-c="no">Decline</button><button type="button" class="btn btn-blue" data-c="yes">Accept</button></div>';
     document.body.appendChild(b);
     b.addEventListener('click', e => {
       const c = e.target.closest('[data-c]'); if (!c) return;
@@ -305,7 +303,7 @@
   document.addEventListener('click', e => {
     const a = e.target.closest('a[href]'); if (!a) return;
     const h = a.getAttribute('href') || '';
-    if (h.startsWith('tel:')) track('phone_call_click', { link_location: a.closest('.hero') ? 'hero' : a.closest('.nav') ? 'header' : a.closest('footer') ? 'footer' : a.classList.contains('fcall') ? 'floating_button' : 'page' });
+    if (h.startsWith('tel:')) track('phone_call_click', { link_location: a.closest('.hero') ? 'hero' : a.closest('.nav') ? 'header' : a.closest('footer') ? 'footer' : a.closest('.mbar') ? 'bottom_bar' : 'page' });
     else if (h.includes('wa.me')) track('whatsapp_click');
     else if (h.includes('maps.app.goo.gl')) track('google_profile_click');
     else if (h.includes('facebook.com')) track('facebook_click');
