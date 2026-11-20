@@ -653,3 +653,15 @@ html.touch .in[data-reveal],html.touch .in[data-split],html.touch .in[data-clip]
   #cookiebar p{flex:1;font-size:.82rem;line-height:1.4}
   #cookiebar .cb-btns{margin:0;flex:none}
 }
+
+/* ===== white quote box in the hero, so it stands out against the dark photo ===== */
+.hform{background:#fff;border-color:#fff;box-shadow:0 24px 60px -24px rgba(0,0,0,.65)}
+.hform input,.hform select{background-color:#fff;border-color:#c5d0e0;color:var(--ink)}
+.hform input::placeholder{color:#6a778c}
+.hform select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230e1a2e' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")}
+.hform input:focus,.hform select:focus{background-color:#fff;border-color:var(--blue);box-shadow:0 0 0 4px rgba(20,121,224,.18)}
+.hform .fnote{color:var(--muted)}
+.hform .fnote a{color:var(--blue)}
+.hform .ferr{background:#fdecec;border-color:#f3b4b4;color:#9b1c1c}
+.hform .ok{background:#eaf6ee;border-color:#bfe3c9;color:#1f6b3a}
+.hform .field.err::after{color:#c62828}
